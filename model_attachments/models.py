@@ -78,10 +78,13 @@ class AttachmentMixin(AuditLogMixin):
     def url(self):
         if self.attachment_type == 'url':
             return self.path
+        path = self.path
+        if self.path.startswith('/'):
+            path = path[1:]
         if self.media_url:
-            return '/'.join([self.media_url, self.path]).replace('//', '/')
+            return '/'.join([self.media_url, path])
         else:
-            return '/'.join([dj_settings.MEDIA_URL, self.path]).replace('//', '/')
+            return '/'.join([dj_settings.MEDIA_URL, path])
 
     def delete(self, *args, **kwargs):
         if self.attachment_type == 'file' and self.path:
